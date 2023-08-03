@@ -1,5 +1,6 @@
 const authHelper = require("./authHelper");
-const controllWrapper = require("./ctrlWrapper");
+const ctrlerWrapper = require("./ctrlWrapper");
 const createErrorReq = require("./createErrorReq");
+const HttpError = require("./HttpError");
 
-module.exports = { authHelper, controllWrapper, createErrorReq };
+module.exports = { authHelper, ctrlerWrapper, createErrorReq, HttpError };

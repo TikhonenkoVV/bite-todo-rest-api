@@ -1,4 +1,6 @@
 const { Schema, model } = require("mongoose");
+const Joi = require("joi");
+
 const taskSchema = new Schema(
   {
     title: {
@@ -50,11 +52,11 @@ const boardSchema = new Schema(
       type: String,
       default: "",
     },
-    owner: {
-      type: Schema.Types.ObjectId,
-      ref: "users",
-      required: "true",
-    },
+    // owner: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "users",
+    //   required: "true",
+    // },
   },
   { versionKey: false, timestamps: true }
 );
@@ -84,7 +86,7 @@ const columnJoiSchema = Joi.object({
   title: Joi.string().min(2).max(32).required(),
 });
 
-const schemas = {
+const scheme = {
   taskJoiSchema,
   boardJoiSchema,
   columnJoiSchema,
@@ -94,4 +96,4 @@ const Task = model("task", taskSchema);
 const Board = model("board", boardSchema);
 const Column = model("column", columnSchema);
 
-module.exports = { schemas, Task, Board, Column };
+module.exports = { scheme, Task, Board, Column };

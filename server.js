@@ -8,7 +8,7 @@ const app = require("./app");
 const mongoose = require("mongoose");
 const { DB_HOST, PORT = 5000 } = process.env;
 
-const formatsLogger = app.get("env") === "development" ? "dev" : "short";
+// const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 mongoose
   .connect(DB_HOST)
   .then(() => {
