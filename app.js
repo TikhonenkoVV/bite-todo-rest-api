@@ -2,7 +2,9 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
+const dotenv = require('dotenv');
 
+const authRouter = require("./routes/api/auth");
 const boardsRouter = require("./routes/api/boards");
 const { createErrorReq } = require("./helpers");
 
@@ -13,6 +15,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
+app.use("/api/auth", authRouter);
 app.use("/api/boards", boardsRouter);
 app.use(createErrorReq);
 
