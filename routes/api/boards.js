@@ -9,6 +9,7 @@ const {
   updateBoard,
   getTasks,
   getColumns,
+  getAllBoards,
 } = require("../../controllers/boards");
 
 const { scheme } = require("../../schemas/tasks");
@@ -22,6 +23,8 @@ router.put(
   validateBody(scheme.boardJoiSchema),
   updateBoard
 );
+router.get("/", authenticate, getAllBoards);
+
 router.post(
   "/:boardId/columns",
   authenticate,
@@ -37,6 +40,7 @@ router.put(
   updateColumn
 );
 router.get("/:boardId/columns", authenticate, isValidId, getColumns);
+
 router.post(
   "/:boardId/columns/:columnId/tasks",
   authenticate,

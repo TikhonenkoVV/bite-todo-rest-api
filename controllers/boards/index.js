@@ -8,6 +8,7 @@ const updateColumn = require("./updateColumn");
 const updateBoard = require("./updateBoard");
 const getTasks = require("./getTasks");
 const getColumns = require("./getColumns");
+const getAllBoards = require("./getAllBoards");
 
 module.exports = {
   addBoard: ctrlerWrapper(addBoard),
@@ -18,4 +19,5 @@ module.exports = {
   updateBoard: ctrlerWrapper(updateBoard),
   getTasks: ctrlerWrapper(getTasks),
   getColumns: ctrlerWrapper(getColumns),
+  getAllBoards: ctrlerWrapper(getAllBoards),
 };
