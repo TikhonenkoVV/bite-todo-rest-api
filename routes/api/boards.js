@@ -10,6 +10,7 @@ const {
   getTasks,
   getColumns,
   getAllBoards,
+  deleteTask,
 } = require("../../controllers/boards");
 
 const { scheme } = require("../../schemas/tasks");
@@ -60,6 +61,12 @@ router.get(
   authenticate,
   isValidId,
   getTasks
+);
+router.delete(
+  "/:boardId/columns/:columnId/tasks/:taskId",
+  authenticate,
+  isValidId,
+  deleteTask
 );
 
 module.exports = router;

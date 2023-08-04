@@ -9,6 +9,7 @@ const updateBoard = require("./updateBoard");
 const getTasks = require("./getTasks");
 const getColumns = require("./getColumns");
 const getAllBoards = require("./getAllBoards");
+const deleteTask = require("./deleteTask");
 
 module.exports = {
   addBoard: ctrlerWrapper(addBoard),
@@ -20,4 +21,5 @@ module.exports = {
   getTasks: ctrlerWrapper(getTasks),
   getColumns: ctrlerWrapper(getColumns),
   getAllBoards: ctrlerWrapper(getAllBoards),
+  deleteTask: ctrlerWrapper(deleteTask),
 };
