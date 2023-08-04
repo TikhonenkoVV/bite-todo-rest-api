@@ -2,19 +2,17 @@ const { Board } = require("../../models/tasks");
 const { HttpError } = require("../../helpers");
 
 const addBoard = async (req, res) => {
-  // const { _id: owner } = req.user;
+  const { _id: owner } = req.user;
 
-  // const result = await Board.findOne({ owner, title: req.body.title });
-  const result = await Board.findOne({ title: req.body.title });
+  const result = await Board.findOne({ owner, title: req.body.title });
 
   if (result) {
     throw HttpError(409, "this board name already exists");
   }
 
-  //   const { _id, title, background, dashboardIcon } = await Board.create({
-  const { title, background, dashboardIcon } = await Board.create({
+  const { _id, title, background, dashboardIcon } = await Board.create({
     ...req.body,
-    // owner,
+    owner,
   });
 
   res.json({
@@ -22,7 +20,7 @@ const addBoard = async (req, res) => {
     code: 201,
     message: "Board created successfully",
     board: {
-      //   _id,
+      _id,
       title,
       background,
       dashboardIcon,

@@ -43,11 +43,11 @@ const boardSchema = new Schema(
       type: String,
       default: "",
     },
-    // owner: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "users",
-    //   required: "true",
-    // },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "users",
+      required: "true",
+    },
   },
   { versionKey: false, timestamps: true }
 );
