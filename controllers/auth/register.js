@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 
-const {User} = require("../../schemas/users");
+const {User} = require("../../models/user");
 
 const {HttpError, ctrlerWrapper} = require("../../helpers");
 

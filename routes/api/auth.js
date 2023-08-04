@@ -3,7 +3,7 @@ const ctrlerWrapper = require("../../helpers/ctrlWrapper");
 const authCtrl = require("../../controllers/auth");
 
 const {validateBody, authenticate} = require("../../middlewares");
-const {userSchemas} = require("../../schemas/users");
+const {userSchemas} = require("../../schemas/userSchemas");
 
 const router = express.Router();
 
