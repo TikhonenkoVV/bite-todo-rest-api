@@ -8,7 +8,7 @@ const {User} = require("../../models/user");
 
 const { JWT_SECRET } = process.env;
 
-const {HttpError, ctrlerWrapper} = require("../../helpers");
+const {HttpError} = require("../../helpers");
 
 const login = async(req, res) => {
     const {email, password} = req.body;
@@ -35,4 +35,4 @@ const login = async(req, res) => {
     });
 }
 
-module.exports = ctrlerWrapper(login);
+module.exports = login;

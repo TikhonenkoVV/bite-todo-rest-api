@@ -1,8 +1,7 @@
-const { ctrlerWrapper } = require("../../helpers");
 const {User} = require("../../models/user");
 
 const updateUser = async (req, res) => {
-  const _id = req.user;
+  const{ _id} = req.user;
     
     const { name, email, password } = req.body;
     const result = await User.findByIdAndUpdate(
@@ -14,4 +13,4 @@ const updateUser = async (req, res) => {
   res.json(result);
 };
 
-module.exports = ctrlerWrapper(updateUser);
+module.exports = updateUser;

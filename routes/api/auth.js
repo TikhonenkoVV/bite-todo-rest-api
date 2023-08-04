@@ -17,7 +17,7 @@ router.get("/current", authenticate, ctrlerWrapper(authCtrl.getCurrent));
 
 router.post("/logout", authenticate, ctrlerWrapper(authCtrl.logout));
 
-router.patch("/", ctrlerWrapper(authCtrl.updateUser));
+router.patch("/", authenticate, ctrlerWrapper(authCtrl.updateUser));
 
 module.exports = router;
 
