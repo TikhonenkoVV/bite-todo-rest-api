@@ -12,6 +12,7 @@ const {
   getAllBoards,
   deleteTask,
   deleteColumn,
+  deleteBoard,
 } = require("../../controllers/boards");
 
 const { scheme } = require("../../schemas/tasks");
@@ -26,6 +27,7 @@ router.put(
   updateBoard
 );
 router.get("/", authenticate, getAllBoards);
+router.delete("/:boardId", authenticate, isValidId, deleteBoard);
 
 router.post(
   "/:boardId/columns",
