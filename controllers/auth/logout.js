@@ -1,4 +1,3 @@
-const { ctrlerWrapper } = require("../../helpers");
 const {User} = require("../../models/user");
 
 const logout = async (req, res) => {
@@ -10,4 +9,4 @@ const logout = async (req, res) => {
     })
 };
 
-module.exports = ctrlerWrapper(logout);
+module.exports = logout;

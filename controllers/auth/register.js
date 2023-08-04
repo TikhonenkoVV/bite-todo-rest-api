@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 
 const {User} = require("../../models/user");
 
-const {HttpError, ctrlerWrapper} = require("../../helpers");
+const {HttpError} = require("../../helpers");
 
 const register = async(req, res) => {
     const {email, password} = req.body;
@@ -22,4 +22,4 @@ const register = async(req, res) => {
     })
 }
 
-module.exports = ctrlerWrapper(register);
+module.exports = register;
