@@ -1,9 +1,11 @@
 require("dotenv").config();
 const app = require("./app");
 const mongoose = require("mongoose");
-// const { DB_HOST, PORT = 5000 } = process.env;
+
+const { DB_HOST } = process.env;
 
 const PORT = process.env.PORT || 5000;
+
 mongoose
     .connect(DB_HOST)
     .then(() => {
