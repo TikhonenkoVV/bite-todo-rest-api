@@ -2,9 +2,9 @@ const { Board } = require("../../schemas/tasks");
 const { HttpError } = require("../../helpers");
 
 const addBoard = async (req, res) => {
-  //   const { _id: owner } = req.user;
+    // const { _id: owner } = req.user;
 
-  //   const result = await Board.findOne({ owner, title: req.body.title });
+    // const result = await Board.findOne({ owner, title: req.body.title });
   const result = await Board.findOne({ title: req.body.title });
 
   if (result) {
