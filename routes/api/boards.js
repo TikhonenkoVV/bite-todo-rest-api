@@ -5,6 +5,7 @@ const {
   addColumn,
   addTask,
   updateTask,
+  updateColumn,
 } = require("../../controllers/boards");
 
 const { scheme } = require("../../schemas/tasks");
@@ -17,6 +18,13 @@ router.post(
   isValidId,
   validateBody(scheme.columnJoiSchema),
   addColumn
+);
+router.put(
+  "/:boardId/columns/:columnId",
+  authenticate,
+  isValidId,
+  validateBody(scheme.columnJoiSchema),
+  updateColumn
 );
 router.post(
   "/:boardId/columns/:columnId/tasks",
