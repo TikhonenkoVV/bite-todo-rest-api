@@ -10,6 +10,9 @@ const {
   getTasks,
   getColumns,
   getAllBoards,
+  deleteTask,
+  deleteColumn,
+  deleteBoard,
 } = require("../../controllers/boards");
 
 const { scheme } = require("../../schemas/tasks");
@@ -24,6 +27,7 @@ router.put(
   updateBoard
 );
 router.get("/", authenticate, getAllBoards);
+router.delete("/:boardId", authenticate, isValidId, deleteBoard);
 
 router.post(
   "/:boardId/columns",
@@ -40,6 +44,12 @@ router.put(
   updateColumn
 );
 router.get("/:boardId/columns", authenticate, isValidId, getColumns);
+router.delete(
+  "/:boardId/columns/:columnId",
+  authenticate,
+  isValidId,
+  deleteColumn
+);
 
 router.post(
   "/:boardId/columns/:columnId/tasks",
@@ -60,6 +70,12 @@ router.get(
   authenticate,
   isValidId,
   getTasks
+);
+router.delete(
+  "/:boardId/columns/:columnId/tasks/:taskId",
+  authenticate,
+  isValidId,
+  deleteTask
 );
 
 module.exports = router;
