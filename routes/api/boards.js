@@ -7,6 +7,7 @@ const {
   updateTask,
   updateColumn,
   updateBoard,
+  getTasks,
 } = require("../../controllers/boards");
 
 const { scheme } = require("../../schemas/tasks");
@@ -47,6 +48,12 @@ router.put(
   isValidId,
   validateBody(scheme.taskJoiSchema),
   updateTask
+);
+router.get(
+  "/:boardId/columns/:columnId/tasks",
+  authenticate,
+  isValidId,
+  getTasks
 );
 
 module.exports = router;
