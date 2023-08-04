@@ -1,5 +1,5 @@
 const { ctrlerWrapper } = require("../../helpers");
-const {User} = require("../../schemas/users");
+const {User} = require("../../models/user");
 
 const logout = async (req, res) => {
     const { _id } = req.user;
