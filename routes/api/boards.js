@@ -1,6 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const { addBoard, addColumn, addTask } = require("../../controllers/boards");
+const {
+  addBoard,
+  addColumn,
+  addTask,
+  updateTask,
+} = require("../../controllers/boards");
 
 const { scheme } = require("../../schemas/tasks");
 const { validateBody, authenticate, isValidId } = require("../../middlewares");
@@ -19,6 +24,13 @@ router.post(
   isValidId,
   validateBody(scheme.taskJoiSchema),
   addTask
+);
+router.put(
+  "/:boardId/columns/:columnId/tasks/:taskId",
+  authenticate,
+  isValidId,
+  validateBody(scheme.taskJoiSchema),
+  updateTask
 );
 
 module.exports = router;
