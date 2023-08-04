@@ -6,12 +6,20 @@ const {
   addTask,
   updateTask,
   updateColumn,
+  updateBoard,
 } = require("../../controllers/boards");
 
 const { scheme } = require("../../schemas/tasks");
 const { validateBody, authenticate, isValidId } = require("../../middlewares");
 
 router.post("/", authenticate, validateBody(scheme.boardJoiSchema), addBoard);
+router.put(
+  "/:boardId",
+  authenticate,
+  isValidId,
+  validateBody(scheme.boardJoiSchema),
+  updateBoard
+);
 router.post(
   "/:boardId/columns",
   authenticate,
