@@ -4,12 +4,14 @@ const register = require("./register");
 const getCurrent = require("./getCurrent");
 const logout = require("./logout");
 const updateUser = require("./updateUser");
+const uploadAvatar = require("./uploadAvatar");
 
-module.exports = { 
+module.exports = {
     refreshToken,
     login,
     register,
     getCurrent,
     logout,
     updateUser,
+    uploadAvatar,
 };
