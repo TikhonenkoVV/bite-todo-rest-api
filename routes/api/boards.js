@@ -9,6 +9,7 @@ const {
   updateBoard,
   getTasks,
   getColumns,
+  getColumnsTasks,
   getAllBoards,
   deleteTask,
   deleteColumn,
@@ -44,6 +45,7 @@ router.put(
   updateColumn
 );
 router.get("/:boardId/columns", authenticate, isValidId, getColumns);
+router.get("/:boardId/columnstasks", authenticate, isValidId, getColumnsTasks);
 router.delete(
   "/:boardId/columns/:columnId",
   authenticate,

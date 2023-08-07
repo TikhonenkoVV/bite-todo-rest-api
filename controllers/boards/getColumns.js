@@ -3,7 +3,7 @@ const { Column } = require("../../models/tasks");
 const getColumns = async (req, res) => {
   const { boardId: owner } = req.params;
 
-  const columns = await Column.find({ owner }, "-createdAt -updatedAt");
+  const columns = await Column.find({ owner }, "-updatedAt");
 
   res.json({
     status: "success",
