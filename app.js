@@ -2,7 +2,11 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const app = express();
-const dotenv = require('dotenv');
+require("dotenv").config();
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 const authRouter = require("./routes/api/auth");
 const boardsRouter = require("./routes/api/boards");

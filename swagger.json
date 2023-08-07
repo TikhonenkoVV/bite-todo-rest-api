@@ -1,0 +1,1473 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Task Pro docs - OpenAPI 3.0",
+    "description": "API documentation for project Task Pro. \n\nЦей проект є веб-додатком для планування особистих справ та дозволяє користувачам вести планування використовуючи особисті дошки та календар, виконувати поставлені завдання в строго встановлений термін.\n\nУ проекті передбачено можливість реєстрації користувачів, їх аутентифікації та авторизації. Крім того, користувачі можуть створювати дошки та відстежувати свої поставлені завдання, розподіляючи їх по приорітетам.\n\nДодаток має дружній та зрозумілий інтерфейс користувача, що дозволяє зручно та швидко виконувати всі необхідні дії. Проект також забезпечує безпеку користувачів за допомогою шифрування паролів та ідентифікації за допомогою токенів.\n\n**Функціональні можливості:**\n\nРеєстрація та авторизація користувачів\n\nДодавання, перегляд та видалення дошок та завдань.\n\n**Стек технологій, що використовується у проекті:**\n\nNode.js - середовище виконання JavaScript на сервері\n\nExpress.js - фреймворк для розробки веб-додатків на Node.js\n\nMongoDB - NoSQL база даних\n\nMongoose - бібліотека для роботи з MongoDB у Node.js",
+    "contact": {
+      "email": "taskpro.project@gmail.com"
+    },
+    "version": "1.0.12"
+  },
+  "servers": [
+    {
+      "url": " https://bite-todo-rest-api.onrender.com"
+    },
+    {
+      "url": "http://localhost:5000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User endpoints"
+    },
+    {
+      "name": "Board",
+      "description": "Board endpoints"
+    },
+    {
+      "name": "Column",
+      "description": "Column endpoints"
+    },
+    {
+      "name": "Task",
+      "description": "Task endpoints"
+    }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "operationId": "AuthController_signUp",
+        "summary": "Sign up new user - User registration",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "# Опис параметрів запиту:\n\n**name** - string, ім'я користувача.\n\n**email** - string, електронна пошта користувача. \n\n**password** - string, зашифрований пароль користувача. \n",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "New User Registered\n\nОпис параметрів відповіді:\n\n**_id** - ObjectId, унікальний ідентифікатор користувача\n\n**name** - string, ім'я користувача.\n\n**email** - string, електронна пошта користувача.\n\n**balance** - number, баланс користувача.\n\n**token** - string, токен використовується для зберігання стану авторизації користувача в системі, що дозволяє користувачам здійснювати захищені запити до API. Токен є довільним рядком символів і генерується при кожній новій авторизації користувача..\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWithTokenDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Val_idation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User with such email already exists"
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_signIn",
+        "summary": "Sign in existing user",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "description": "# Опис параметрів запиту:\n\n**email** - string, електронна пошта користувача. **Обов'язковий параметр**\n\n**password** - string, зашифрований пароль користувача. **Обов'язковий параметр**\n",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created session for existing user\n \n Опис параметрів відповіді:\n \n **name** - string, ім'я користувача.\n \n **email** - string, електронна пошта користувача.\n \n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWithTokenDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Provided password is incorrect"
+          },
+          "404": {
+            "description": "User with such email not found"
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "AuthController_signOut",
+        "summary": "Signs out user",
+        "description": "Ендпоінт логауту - це механізм виходу з системи, який припиняє дію сесії користувача та знищує токен доступу, що був виданий при попередній аутентифікації.\n\nОпис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /api/auth/logout з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.\n",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User signed out - успішний вихід з системи"
+          },
+          "401": {
+            "description": "Bearer auth failed - невалідний токен - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/auth/current": {
+      "get": {
+        "operationId": "UsersController_getLoggedUser",
+        "summary": "Get current user info",
+        "description": "Ендпоінт \"current\" використовується для отримання інформації про поточного авторизованого користувача. Цей ендпоінт повертає об'єкт, який містить інформацію про користувача, таку як ім'я, електронна пошта, ідентифікатор користувача тощо.\n\nПараметри: відсутні\n\nОпис: Коли користувач натискає кнопку вийти з системи, він робить запит на URL /api/auth/sign-out з валідним токеном у заголовку Authorization. Сервер перевіряє валідність токена, якщо токен є дійсним, то сесія користувача закривається, токен видаляється і користувач повертається на сторінку входу в систему. Якщо токен не є валідним, то сервер повертає статус 401 і повідомляє про невалідність токена.\n",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Logged user returned\n\nJSON-об'єкт, який містить інформацію про поточного авторизованого користувача.\n\nОпис параметрів відповіді:\n\n**name** - string, ім'я користувача.\n\n**email** - string, електронна пошта користувача.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          }
+        },
+        "tags": ["User"]
+      }
+    },
+    "/api/boards": {
+      "post": {
+        "operationId": "Controller_createBoard",
+        "summary": "Create new Board for logged in user",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "# Опис параметрів запиту:\n\n**title** - string, назва дошки. **Обов'язковий параметр**\n\n**owner** - string, owner **Обов'язковий параметр**\n",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBoard"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Board created\n\nОпис параметрів відповіді:\n\n**_id** - ObjectId, унікальний ідентифікатор дошки\n\n**owner** - ObjectId, унікальний ідентифікатор користувача\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoardDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Board category not found"
+          },
+          "409": {
+            "description": "this board name already exists"
+          }
+        },
+        "tags": ["Board"]
+      },
+      "get": {
+        "operationId": "Controller_getBoards",
+        "summary": "Get all Board for logged in user",
+        "description": "Ендпоінт /api/boards типу GET призначений для отримання інформації про всі дошки користувача. Для доступу до цього ендпоінту потрібна аутентифікація, тому у заголовку запиту має бути переданий токен авторизації.\n\nПри успішному виконанні запиту сервер повертає статус код 200 та список усіх дошок користувача.\n\nУ разі, якщо користувач не має жодної дошки, то сервер поверне статус код 200 та порожній список.\n",
+        "parameters": [],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all transactions for logged in user \n\nОпис параметрів відповіді:\n\n**_id** - ObjectId, унікальний ідентифікатор дошки\n\n**owner** - ObjectId, унікальний ідентифікатор користувача\n\n**title** - ObjectId, унікальний ідентифікатор колонки.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BoardDetails"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Board"]
+      }
+    },
+    "/api/boards/{boardId}": {
+      "put": {
+        "operationId": "Controller_updateBoard",
+        "summary": "Update Board",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBoard"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Board updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoardDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User does not owns Board"
+          },
+          "404": {
+            "description": "Board  category not found"
+          }
+        },
+        "tags": ["Board"]
+      },
+      "delete": {
+        "operationId": "Controller_deleteBoard",
+        "summary": "Remove Board",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Board deleted"
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User does not owns"
+          },
+          "404": {
+            "description": "Board not found"
+          }
+        },
+        "tags": ["Board"]
+      }
+    },
+    "/api/boards/{boardId}/columns": {
+      "post": {
+        "operationId": "AddBoardColumn",
+        "summary": "Column to add",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateColumn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Column returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ColumnDetails"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Column"]
+      },
+      "get": {
+        "operationId": "Controller_getBoards",
+        "summary": "Get all Board for logged in user",
+        "description": "Ендпоінт /api/boards:boardId/columns/ типу GET призначений для отримання інформації про всі колонки користувача. Для доступу до цього ендпоінту потрібна аутентифікація, тому у заголовку запиту має бути переданий токен авторизації.\n\nПри успішному виконанні запиту сервер повертає статус код 200 та список усіх колонок користувача.\n\nУ разі, якщо користувач не має жодної колонки, то сервер поверне статус код 200 та порожній список.\n",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all transactions for logged in user \n\nОпис параметрів відповіді:\n\n**_id** - ObjectId, унікальний ідентифікатор дошки\n\n**owner** - ObjectId, унікальний ідентифікатор користувача\n\n**title** - ObjectId, унікальний ідентифікатор колонки.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ColumnDetails"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Column"]
+      }
+    },
+    "/api/boards/{boardId}/columns/{columnId}": {
+      "put": {
+        "operationId": "Controller_updateColumn",
+        "summary": "Update Column",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "columnId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateColumn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Column updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ColumnDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User does not owns Column"
+          },
+          "404": {
+            "description": "Column  category not found"
+          }
+        },
+        "tags": ["Column"]
+      },
+      "delete": {
+        "operationId": "Controller_deleteColumn",
+        "summary": "Remove Column",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "columnId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Column deleted"
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User does not owns"
+          },
+          "404": {
+            "description": "Column not found"
+          }
+        },
+        "tags": ["Column"]
+      }
+    },
+    "/api/boards/{boardId}/columns/{columnId}/tasks": {
+      "post": {
+        "operationId": "AddColumnTask",
+        "summary": "Task to add",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "columnId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTask"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Card returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskDetails"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Task"]
+      },
+      "get": {
+        "operationId": "Controller_getBoards",
+        "summary": "Get all Tasks for logged in user",
+        "description": "Ендпоінт /api/boards/:boardId/columns/:columnId/tasks типу GET призначений для отримання інформації про всі колонки користувача. Для доступу до цього ендпоінту потрібна аутентифікація, тому у заголовку запиту має бути переданий токен авторизації.\n\nПри успішному виконанні запиту сервер повертає статус код 200 та список усіх дошок користувача.\n\nУ разі, якщо користувач не має жодної колонки, то сервер поверне статус код 200 та порожній список.\n",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "columnId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get all transactions for logged in user \n\nОпис параметрів відповіді:\n\n**_id** - ObjectId, унікальний ідентифікатор завдання\n\n**owner** - ObjectId, унікальний ідентифікатор користувача\n\n**title** - ObjectId, унікальний ідентифікатор завдання.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskDetails"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Task"]
+      }
+    },
+    "/api/boards/{boardId}/columns/{columnId}/tasks/{taskId}": {
+      "put": {
+        "operationId": "Controller_updateTask",
+        "summary": "Update Task",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "columnId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTask"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskDetails"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User does not owns Task"
+          },
+          "404": {
+            "description": "Task  category not found"
+          }
+        },
+        "tags": ["Task"]
+      },
+      "delete": {
+        "operationId": "Controller_deleteTask",
+        "summary": "Remove Task",
+        "parameters": [
+          {
+            "name": "boardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "columnId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "taskId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task deleted"
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequesResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer auth failed - Якщо запит не містить дійсний токен або токен вже вичерпав свій термін дії, сервер поверне відповідь з кодом статусу HTTP 401 Unauthorized.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Description of the error."
+                    }
+                  }
+                },
+                "example": {
+                  "message": "Authentication failed. Please log in."
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "User does not owns"
+          },
+          "404": {
+            "description": "Task not found"
+          }
+        },
+        "tags": ["Task"]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "UserDetails": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0Y2NhZjBlYjFiODMyNTUwNWY1YmQ3NyIsImlhdCI6MTY5MTEzNTk2OSwiZXhwIjoxNjkxMjE4NzY5fQ.iaesIv5TdNx4JcjbEcSUQk4yBjrGj2jFhgHNKUNHISo"
+          },
+          "name": {
+            "type": "string",
+            "example": "Mark"
+          },
+          "email": {
+            "type": "string",
+            "example": "mark@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "4Dqtb45QDAtt7"
+          },
+          "avatarURL": {
+            "type": "string",
+            "example": "www.gravatar.com/avatar/888e4ae2496af9cd1439b95d1278cae5"
+          }
+        },
+        "required": ["password", "email", "name", "token", "avatarURL"]
+      },
+      "CreateBoard": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "first board"
+          },
+          "background": {
+            "type": "string",
+            "example": "moon"
+          },
+          "dashboardIcon": {
+            "type": "string",
+            "example": "icon-loading"
+          }
+        },
+        "required": ["title", "background", "dashboardIcon", "owner"]
+      },
+      "BoardDetails": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64cf8be21ebe25239d870914"
+          },
+          "title": {
+            "type": "string",
+            "example": "Scheduler"
+          },
+          "background": {
+            "type": "string",
+            "example": "moon"
+          },
+          "dashboardIcon": {
+            "type": "string",
+            "example": "icon-loading"
+          },
+          "owner": {
+            "type": "string",
+            "example": "64ce4e9d5016f53b8e387597"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2023-07-20"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2023-07-20"
+          }
+        },
+        "required": [
+          "_id",
+          "title",
+          "background",
+          "dashboardIcon",
+          "owner",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "UpdateBoard": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Scheduler"
+          },
+          "background": {
+            "type": "string",
+            "example": "balloon"
+          },
+          "dashboardIcon": {
+            "type": "string",
+            "example": "icon-loading"
+          }
+        }
+      },
+      "CreateColumn": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Main expression"
+          },
+          "owner": {
+            "type": "string",
+            "example": "64ce4e9d5016f53b8e387597"
+          }
+        },
+        "required": ["_id", "title", "owner"]
+      },
+      "UpdateColumn": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Main expression"
+          },
+          "owner": {
+            "type": "string",
+            "example": "64ce4e9d5016f53b8e387597"
+          }
+        },
+        "required": ["_id", "title", "owner"]
+      },
+      "ColumnDetails": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64cf8be21ebe25239d870914"
+          },
+          "title": {
+            "type": "string",
+            "example": "Main expression"
+          },
+          "owner": {
+            "type": "string",
+            "example": "64ce4e9d5016f53b8e387597"
+          }
+        },
+        "required": ["_id", "title", "owner"]
+      },
+      "SignUp": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Username",
+            "example": "Mark"
+          },
+          "email": {
+            "type": "string",
+            "example": "mark@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "p#10$3Zk@NThxq"
+          }
+        },
+        "required": ["name", "email", "password"]
+      },
+      "UserWithTokenDetails": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserDetails"
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyOWI4ZmZmNS0xN2NjLTQ5NTYtOTViZC1jN2U3N2FkZDEwOWEiLCJpYXQiOjE2ODE4OTM3MzEsImV4cCI6MTAwMDAwMDE2ODE4OTM3MzJ9.hQpNKIj4SR7Gm9waUMn7hzwKQyqwKrniL_qSW7SxrjM"
+          }
+        },
+        "required": ["user", "token"]
+      },
+      "SignIn": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "mark@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "p#10$3Zk@NThxq"
+          }
+        },
+        "required": ["email", "password"]
+      },
+      "CreateTask": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Sprint"
+          },
+          "description": {
+            "type": "string",
+            "example": "Sprint"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["without", "low", "high", "medium"],
+            "example": "low"
+          },
+          "deadline": {
+            "type": "date",
+            "example": "2023-07-20"
+          }
+        },
+        "required": ["title", "description", "priority", "deadline"]
+      },
+      "UpdateTask": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "example": "Scheduler"
+          },
+          "description": {
+            "type": "string",
+            "example": "Other"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["without", "low", "high", "medium"],
+            "example": "low"
+          },
+          "deadline": {
+            "type": "date",
+            "example": "2023-07-20"
+          }
+        },
+        "required": ["title", "description", "priority", "deadline"]
+      },
+      "TaskDetails": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "64cf9ffa1ebe25239d870a72"
+          },
+          "title": {
+            "type": "string",
+            "example": "Scheduler"
+          },
+          "description": {
+            "type": "string",
+            "example": "Other"
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["without", "low", "high", "medium"],
+            "example": "low"
+          },
+          "deadline": {
+            "type": "date",
+            "example": "2023-07-20"
+          },
+          "owner": {
+            "type": "string",
+            "example": "64ce4e9d5016f53b8e387597"
+          }
+        },
+        "required": [
+          "_id",
+          "title",
+          "description",
+          "priority",
+          "deadline",
+          "owner"
+        ]
+      },
+      "errorBadRequesResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "400"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Bad request"
+          }
+        }
+      },
+      "errorConflictResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "409"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "User with email - user@example.com, already exist"
+          }
+        }
+      },
+      "errorUnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "401"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Not authorized"
+          }
+        }
+      },
+      "errorNotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Error status code",
+            "example": "404"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "Not found"
+          }
+        }
+      },
+      "errorAddColumnResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "failure"
+          },
+          "code": {
+            "type": "integer",
+            "example": "409"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "The column you are trying to add already exists"
+          }
+        }
+      },
+      "errorRemoveColumnResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "example": "failure"
+          },
+          "code": {
+            "type": "integer",
+            "example": "409"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message",
+            "example": "The column you are trying to delete is not exist"
+          }
+        }
+      }
+    }
+  }
+}
