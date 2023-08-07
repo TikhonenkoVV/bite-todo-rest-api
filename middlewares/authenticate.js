@@ -14,6 +14,11 @@ const authenticate = async (req, res, next) => {
     if (bearer !== "Bearer") {
         next(HttpError(401));
     }
+
+    if (!token) {
+        next(HttpError(401, "No token"));
+    }
+
     try {
         const { userId } = jwt.verify(token, JWT_SECRET);
         console.log("userId", userId);
