@@ -10,15 +10,15 @@ const router = express.Router();
 router.post("/refresh", ctrlerWrapper(authCtrl.refreshToken));
 
 router.post(
-    "/register",
-    validateBody(userSchemas.registerSchema),
-    ctrlerWrapper(authCtrl.register)
+  "/register",
+  validateBody(userSchemas.registerSchema),
+  ctrlerWrapper(authCtrl.register)
 );
 
 router.post(
-    "/login",
-    validateBody(userSchemas.loginSchema),
-    ctrlerWrapper(authCtrl.login)
+  "/login",
+  validateBody(userSchemas.loginSchema),
+  ctrlerWrapper(authCtrl.login)
 );
 
 router.get("/current", authenticate, ctrlerWrapper(authCtrl.getCurrent));
@@ -28,10 +28,11 @@ router.post("/logout", authenticate, ctrlerWrapper(authCtrl.logout));
 router.patch("/", authenticate, ctrlerWrapper(authCtrl.updateUser));
 
 router.patch(
-    "/avatars",
-    authenticate,
-    upload.single("avatar"),
-    ctrlerWrapper(authCtrl.uploadAvatar)
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  ctrlerWrapper(authCtrl.uploadAvatar)
 );
+router.post("/help", authenticate, ctrlerWrapper(authCtrl.help));
 
 module.exports = router;

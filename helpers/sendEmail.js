@@ -10,7 +10,7 @@ const sendEmail = async (data) => {
   const emailBody = {
     from: email,
     to: toEmail,
-    subject: "Verify email",
+    subject: message,
     html: `<p>${message}</p>`,
   };
 
