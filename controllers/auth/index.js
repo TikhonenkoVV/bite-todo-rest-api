@@ -5,13 +5,15 @@ const getCurrent = require("./getCurrent");
 const logout = require("./logout");
 const updateUser = require("./updateUser");
 const uploadAvatar = require("./uploadAvatar");
+const help = require("./help");
 
 module.exports = {
-    refreshToken,
-    login,
-    register,
-    getCurrent,
-    logout,
-    updateUser,
-    uploadAvatar,
+  refreshToken,
+  login,
+  register,
+  getCurrent,
+  logout,
+  updateUser,
+  uploadAvatar,
+  help,
 };
