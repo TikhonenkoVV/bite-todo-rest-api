@@ -64,8 +64,20 @@ const columnSchema = new Schema(
       required: "true",
     },
   },
-  { versionKey: false, timestamps: true }
+  { versionKey: false,
+    timestamps: true, 
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+    id: false,
+  }
 );
+
+columnSchema.virtual('cards', {
+  ref: 'task',
+  localField: '_id',
+  foreignField: 'owner',
+});
+
 const Task = model("task", taskSchema);
 const Board = model("board", boardSchema);
 const Column = model("column", columnSchema);
