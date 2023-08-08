@@ -6,7 +6,7 @@ const updateColumn = async (req, res) => {
 
   const column = await Column.findByIdAndUpdate(columnId, req.body, {
     new: true,
-    select: "-createdAt -updatedAt",
+    select: "-updatedAt",
   });
 
   if (!column) {
