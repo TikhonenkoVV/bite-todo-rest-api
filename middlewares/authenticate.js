@@ -9,22 +9,26 @@ const { HttpError } = require("../helpers");
 const authenticate = async (req, res, next) => {
     const { authorization = "" } = req.headers;
     const [bearer, token] = authorization.split(" ");
-    console.log("token", token);
 
     if (bearer !== "Bearer") {
-        next(HttpError(401));
+        next(HttpError(401, "Unsupported token"));
     }
     try {
         const { userId } = jwt.verify(token, JWT_SECRET);
-        console.log("userId", userId);
         const user = await User.findById(userId);
-        if (!user || !user.token || user.token !== token) {
+        console.log("user", user);
+        if (!user) {
             next(HttpError(401));
         }
         req.user = user;
         next();
     } catch (error) {
-        next(HttpError(401));
+        if (error instanceof jwt.TokenExpiredError) {
+            return res.status(400).json({ message: "Token expired" });
+        }
+        if (error instanceof jwt.JsonWebTokenError) {
+            return res.status(400).json({ message: "Invalid token" });
+        }
     }
 };
 
