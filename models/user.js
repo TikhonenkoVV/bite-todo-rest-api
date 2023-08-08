@@ -23,11 +23,9 @@ const userSchema = new Schema(
         },
         theme: {
             type: String,
-            required: true,
         },
         avatarURL: {
             type: String,
-            required: true,
         },
     },
     {
