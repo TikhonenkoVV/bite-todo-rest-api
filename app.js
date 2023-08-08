@@ -23,4 +23,19 @@ app.use("/api/auth", authRouter);
 app.use("/api/boards", boardsRouter);
 app.use(createErrorReq);
 
+app.use((req, res) => {
+    res.status(404).json({ message: "Not found" });
+});
+
+app.use((err, req, res, next) => {
+    if (err.name === "ValidationError") {
+        res.status(400).json({ message: err.message });
+    }
+    if (err.code === 11000) {
+        res.status(409).json({ message: "Already exist" });
+    }
+    const { status = 500, message = "server error" } = err;
+    res.status(status).json({ message });
+});
+
 module.exports = app;
