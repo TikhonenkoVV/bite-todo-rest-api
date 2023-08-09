@@ -24,7 +24,12 @@ const login = async (req, res) => {
 
     res.status(201).json({
         tokens,
-        user: { email: user.email, name: user.name },
+        user: {
+            email: user.email,
+            name: user.name,
+            theme: user.theme,
+            avatarURL: user.avatarURL,
+        },
     });
 };
 
