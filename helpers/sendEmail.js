@@ -1,20 +1,31 @@
-const sgMail = require("@sendgrid/mail");
 require("dotenv").config();
+const { nanoid } = require("nanoid");
+const nodemailer = require("nodemailer");
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const { META_PASSWORD, EMAIL } = process.env;
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.meta.ua",
+  port: 465,
+  secure: true,
+  auth: {
+    user: EMAIL,
+    pass: META_PASSWORD,
+  },
+});
 
 const sendEmail = async (data) => {
   const { email, message } = data;
   const toEmail = "taskpro.project@gmail.com";
 
   const emailBody = {
-    from: email,
+    from: EMAIL,
     to: toEmail,
-    subject: message,
-    html: `<p>${message}</p>`,
+    subject: `ask #${nanoid()}: ${message}`,
+    html: `<p><b>order #${nanoid()}: ${message} from user: ${email}</b></p>`,
   };
 
-  await sgMail.send(emailBody);
+  await transporter.sendMail(emailBody);
   return true;
 };
 
