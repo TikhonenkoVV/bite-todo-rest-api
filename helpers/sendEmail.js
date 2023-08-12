@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "taskpro2023@meta.ua",
+    user: EMAIL,
     pass: META_PASSWORD,
   },
 });
