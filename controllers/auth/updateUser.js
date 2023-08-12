@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const { User } = require("../../models/user");
 
 const updateUser = async (req, res) => {
@@ -6,7 +7,12 @@ const updateUser = async (req, res) => {
 
   if (req.body.name) updateFields.name = req.body.name;
   if (req.body.email) updateFields.email = req.body.email;
-  if (req.body.password) updateFields.password = req.body.password;
+  if (req.body.theme) updateFields.theme = req.body.theme;
+
+  if (req.body.password) {
+    const hashPassword = await bcrypt.hash(req.body.password, 10);
+    updateFields.password = hashPassword;
+  }
 
   const result = await User.findByIdAndUpdate(
     _id,
