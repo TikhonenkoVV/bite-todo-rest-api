@@ -5,6 +5,7 @@ const HttpError = require("./HttpError");
 const handleMongooseError = require("./handleMongooseError");
 const createAvatar = require("./createAvatar");
 const { sendEmail } = require("./sendEmail");
+const uploadCloud = require("./uploadCloud");
 
 module.exports = {
   authHelper,
@@ -14,4 +15,5 @@ module.exports = {
   handleMongooseError,
   createAvatar,
   sendEmail,
+  uploadCloud,
 };

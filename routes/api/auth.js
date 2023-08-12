@@ -30,7 +30,7 @@ router.patch("/", authenticate, ctrlerWrapper(authCtrl.updateUser));
 router.patch(
   "/avatars",
   authenticate,
-  upload.single("avatar"),
+  upload.single("avatarURL"),
   ctrlerWrapper(authCtrl.uploadAvatar)
 );
 router.post("/help", authenticate, ctrlerWrapper(authCtrl.help));
