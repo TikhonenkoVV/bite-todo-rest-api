@@ -1,16 +1,18 @@
 const { Task } = require("../../models/tasks");
 
 const getTasks = async (req, res) => {
-  const { columnId: owner } = req.params;
+    const { columnId: owner } = req.params;
 
-  const tasks = await Task.find({ owner }, "-createdAt -updatedAt");
+    const tasks = await Task.find({ owner }, "-createdAt -updatedAt").sort(
+        "index"
+    );
 
-  res.json({
-    status: "success",
-    code: 200,
-    message: "Tasks successfully received",
-    tasks,
-  });
+    res.json({
+        status: "success",
+        code: 200,
+        message: "Tasks successfully received",
+        tasks,
+    });
 };
 
 module.exports = getTasks;

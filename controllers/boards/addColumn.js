@@ -6,6 +6,7 @@ const addColumn = async (req, res) => {
     const {
         _id,
         title,
+        index,
         owner: columnOwner,
     } = await Column.create({ ...req.body, owner });
 
@@ -16,6 +17,7 @@ const addColumn = async (req, res) => {
         column: {
             _id,
             title,
+            index,
             cards: [],
             owner: columnOwner,
         },
