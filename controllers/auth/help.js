@@ -1,19 +1,21 @@
 const { sendEmail } = require("../../helpers/");
 
 const help = async (req, res) => {
-  const { email, message = null } = req.body;
+    const { name, email, message = null } = req.body;
 
-  const helpEmail = {
-    email,
-    message,
-  };
+    const helpEmail = {
+        name,
+        email,
+        message,
+    };
 
-  await sendEmail(helpEmail);
+    await sendEmail(helpEmail);
 
-  res.status(201).json({
-    email,
-    message,
-  });
+    res.status(201).json({
+        name,
+        email,
+        message,
+    });
 };
 
 module.exports = help;
