@@ -3,7 +3,7 @@ module.exports = {
         tokens: {
             access: {
                 type: "access",
-                expiresIn: "20s",
+                expiresIn: "3m",
             },
             refresh: {
                 type: "refresh",
