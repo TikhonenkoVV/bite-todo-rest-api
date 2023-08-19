@@ -22,6 +22,7 @@ const refreshTokens = async (req, res) => {
     }
 
     const session = jwt.decode(refreshToken);
+    console.log("prevses", session.sessionId);
     const token = await Token.findOne({ sessionId: session.sessionId });
 
     if (token === null) {
