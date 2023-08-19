@@ -37,7 +37,7 @@ const generateRefreshToken = () => {
 };
 
 const replaceDbRefreshToken = async (tokenId, userId, session) => {
-    await Token.findOneAndDelete(session);
+    if (session) await Token.findOneAndDelete(session);
 
     const result = await Token.create({ tokenId, userId, sessionId });
 
