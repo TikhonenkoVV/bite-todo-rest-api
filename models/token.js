@@ -4,6 +4,7 @@ const tokenSchema = new Schema(
     {
         tokenId: String,
         userId: String,
+        sessionId: String,
     },
     {
         timestamps: false,

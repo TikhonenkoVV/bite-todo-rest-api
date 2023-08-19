@@ -20,7 +20,7 @@ const login = async (req, res) => {
 
     const tokens = await authHelper.updateTokens(user.id);
 
-    await User.findByIdAndUpdate(user._id, { token: tokens.accessToken });
+    // await User.findByIdAndUpdate(user._id, { token: tokens.accessToken });
 
     res.status(201).json({
         tokens,

@@ -4,6 +4,7 @@ const Token = require("../models/token");
 const { tokens } = require("../config/tokenConfig").jwt;
 
 const { JWT_SECRET: secret } = process.env;
+const sessionId = nanoid();
 
 const generateAccessToken = (userId) => {
     const payload = {
@@ -20,6 +21,7 @@ const generateAccessToken = (userId) => {
 
 const generateRefreshToken = () => {
     const payload = {
+        sessionId,
         id: nanoid(),
         type: tokens.refresh.type,
     };
@@ -34,19 +36,19 @@ const generateRefreshToken = () => {
     };
 };
 
-const replaceDbRefreshToken = async (tokenId, userId) => {
-    await Token.findOneAndDelete(userId);
+const replaceDbRefreshToken = async (tokenId, userId, session) => {
+    await Token.findOneAndDelete(session);
 
-    const result = await Token.create({ tokenId, userId });
+    const result = await Token.create({ tokenId, userId, sessionId });
 
     return result;
 };
 
-const updateTokens = async (userId) => {
+const updateTokens = async (userId, session) => {
     const accessToken = authHelper.generateAccessToken(userId);
     const refreshToken = authHelper.generateRefreshToken();
 
-    await authHelper.replaceDbRefreshToken(refreshToken.id, userId);
+    await authHelper.replaceDbRefreshToken(refreshToken.id, userId, session);
 
     return { accessToken, refreshToken: refreshToken.token };
 };

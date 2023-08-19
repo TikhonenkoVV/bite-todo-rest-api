@@ -21,13 +21,17 @@ const refreshTokens = async (req, res) => {
         }
     }
 
-    const token = await Token.findOne({ tokenId: payload.id });
+    const session = jwt.decode(refreshToken);
+    const token = await Token.findOne({ sessionId: session.sessionId });
 
     if (token === null) {
         return res.status(400).json({ message: "Invalid token" });
     }
 
-    const newTokens = await authHelper.updateTokens(token.userId);
+    const newTokens = await authHelper.updateTokens(
+        token.userId,
+        session.sessionId
+    );
     return res.json(newTokens);
 };
 
