@@ -1,5 +1,4 @@
-const { Column } = require("../../models/tasks");
-const { Task } = require("../../models/tasks"); 
+const { Column, Task } = require("../../models/tasks");
 const { HttpError } = require("../../helpers");
 
 const deleteColumn = async (req, res) => {
@@ -7,8 +6,8 @@ const deleteColumn = async (req, res) => {
 
   const cardsCount = await Task.countDocuments({ owner: columnId });
 
-  if (cardsCount > 0) {
-    throw HttpError(409, "It is impossible to remove column when exists one or more cards.");
+  if (cardsCount) {   
+    await Task.deleteMany({ owner: columnId });
   }
 
   const column = await Column.findByIdAndRemove(columnId);
