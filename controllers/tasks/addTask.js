@@ -1,17 +1,8 @@
-const { Task } = require("../../models/tasks");
+const { Task } = require("../../models");
 
 const addTask = async (req, res) => {
-    const { columnId: owner } = req.params;
-
-    const {
-        title,
-        description,
-        priority,
-        deadline,
-        index,
-        owner: taskOwner,
-        _id,
-    } = await Task.create({ ...req.body, owner });
+    const { title, description, priority, deadline, index, owner, _id } =
+        await Task.create({ ...req.body });
 
     res.json({
         status: "create",
@@ -23,7 +14,7 @@ const addTask = async (req, res) => {
             priority,
             deadline,
             index,
-            owner: taskOwner,
+            owner,
             _id,
         },
     });

@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { nanoid } = require("nanoid");
-const Token = require("../models/token");
+const { Token } = require("../models");
 const { tokens } = require("../config/tokenConfig").jwt;
 
 const { JWT_SECRET: secret } = process.env;

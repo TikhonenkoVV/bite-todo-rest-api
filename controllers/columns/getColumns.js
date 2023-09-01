@@ -1,7 +1,7 @@
-const { Column } = require("../../models/tasks");
+const { Column } = require("../../models");
 
-const getColumnsTasks = async (req, res) => {
-    const { boardId: owner } = req.params;
+const getColumns = async (req, res) => {
+    const { owner } = req.params;
 
     const columns = await Column.find({ owner }, "-updatedAt")
         .populate({ path: "cards", options: { sort: "index" } })
@@ -15,4 +15,4 @@ const getColumnsTasks = async (req, res) => {
     });
 };
 
-module.exports = getColumnsTasks;
+module.exports = getColumns;

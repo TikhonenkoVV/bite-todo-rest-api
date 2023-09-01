@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { authHelper } = require("../../helpers");
-const Token = require("../../models/token");
+const { Token } = require("../../models");
 
 const { JWT_SECRET } = process.env;
 

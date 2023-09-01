@@ -3,9 +3,8 @@ const dotenv = require("dotenv");
 
 dotenv.config();
 
-const { User } = require("../../models/user");
-
 const { HttpError, authHelper } = require("../../helpers");
+const { User } = require("../../models");
 
 const login = async (req, res) => {
     const { email, password } = req.body;

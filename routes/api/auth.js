@@ -1,5 +1,4 @@
 const express = require("express");
-const ctrlerWrapper = require("../../helpers/ctrlWrapper");
 const authCtrl = require("../../controllers/auth");
 
 const {
@@ -8,23 +7,19 @@ const {
     upload,
     passport,
 } = require("../../middlewares");
-const { userSchemas } = require("../../schemas/userSchemas");
+const { userSchemas } = require("../../schemas");
 
 const router = express.Router();
 
-router.post("/refresh", ctrlerWrapper(authCtrl.refreshToken));
+router.post("/refresh", authCtrl.refreshToken);
 
 router.post(
     "/register",
     validateBody(userSchemas.registerSchema),
-    ctrlerWrapper(authCtrl.register)
+    authCtrl.register
 );
 
-router.post(
-    "/login",
-    validateBody(userSchemas.loginSchema),
-    ctrlerWrapper(authCtrl.login)
-);
+router.post("/login", validateBody(userSchemas.loginSchema), authCtrl.login);
 
 router.get(
     "/google",
@@ -37,18 +32,18 @@ router.get(
     authCtrl.googleAuuth
 );
 
-router.get("/current", authenticate, ctrlerWrapper(authCtrl.getCurrent));
+router.get("/current", authenticate, authCtrl.getCurrent);
 
-router.post("/logout", authenticate, ctrlerWrapper(authCtrl.logout));
+router.post("/logout", authenticate, authCtrl.logout);
 
-router.patch("/", authenticate, ctrlerWrapper(authCtrl.updateUser));
+router.patch("/", authenticate, authCtrl.updateUser);
 
 router.patch(
     "/avatars",
     authenticate,
     upload.single("avatarURL"),
-    ctrlerWrapper(authCtrl.uploadAvatar)
+    authCtrl.uploadAvatar
 );
-router.post("/help", authenticate, ctrlerWrapper(authCtrl.help));
+router.post("/help", authenticate, authCtrl.help);
 
 module.exports = router;

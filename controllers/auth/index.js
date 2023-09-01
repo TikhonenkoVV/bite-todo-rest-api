@@ -1,6 +1,7 @@
+const { ctrlerWrapper } = require("../../helpers");
 const refreshToken = require("./refreshToken");
-const login = require("./login");
 const register = require("./register");
+const login = require("./login");
 const getCurrent = require("./getCurrent");
 const logout = require("./logout");
 const updateUser = require("./updateUser");
@@ -9,13 +10,13 @@ const help = require("./help");
 const googleAuuth = require("./googleAuuth");
 
 module.exports = {
-    refreshToken,
-    login,
-    register,
-    getCurrent,
-    logout,
-    updateUser,
-    uploadAvatar,
-    help,
-    googleAuuth,
+    refreshToken: ctrlerWrapper(refreshToken),
+    register: ctrlerWrapper(register),
+    login: ctrlerWrapper(login),
+    getCurrent: ctrlerWrapper(getCurrent),
+    logout: ctrlerWrapper(logout),
+    updateUser: ctrlerWrapper(updateUser),
+    uploadAvatar: ctrlerWrapper(uploadAvatar),
+    help: ctrlerWrapper(help),
+    googleAuuth: ctrlerWrapper(googleAuuth),
 };

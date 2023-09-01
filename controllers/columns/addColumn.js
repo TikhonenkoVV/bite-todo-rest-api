@@ -1,14 +1,11 @@
-const { Column } = require("../../models/tasks");
+const { Column } = require("../../models");
 
 const addColumn = async (req, res) => {
-    const { boardId: owner } = req.params;
+    const { _id, title, index, owner } = await Column.create({
+        ...req.body,
+    });
 
-    const {
-        _id,
-        title,
-        index,
-        owner: columnOwner,
-    } = await Column.create({ ...req.body, owner });
+    console.log(req.body);
 
     res.json({
         status: "create",
@@ -19,7 +16,7 @@ const addColumn = async (req, res) => {
             title,
             index,
             cards: [],
-            owner: columnOwner,
+            owner,
         },
     });
 };
